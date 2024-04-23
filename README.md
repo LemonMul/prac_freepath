@@ -1,1 +1,1 @@
-# prac_freepath
+# 아니 csv파일을 왜 못읽냐고 
