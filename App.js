@@ -11,7 +11,7 @@ const MapScreen = () => {
     async function loadCSV() {
       try {
         const asset = Asset.fromModule(require('./assets/seoul_museums.csv'));
-        await asset.downloadAsync();  // 이 메서드는 파일을 캐시 디렉토리로 다운로드합니다
+        await asset.downloadAsync();  // 
         const csvContent = await FileSystem.readAsStringAsync(asset.localUri);
         parseCSV(csvContent);
       } catch (e) {
