@@ -1,40 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View } from 'react-native';
 import MapView, { Marker, Callout } from 'react-native-maps';
-import { Asset } from 'expo-asset';
-import * as FileSystem from 'expo-file-system';
 
 const MapScreen = () => {
   const [markers, setMarkers] = useState([]);
 
   useEffect(() => {
-    async function loadCSV() {
-      try {
-        const asset = Asset.fromModule(require('./assets/seoul_museums.csv'));
-        await asset.downloadAsync();  // 이 메서드는 파일을 캐시 디렉토리로 다운로드합니다
-        const csvContent = await FileSystem.readAsStringAsync(asset.localUri);
-        parseCSV(csvContent);
-      } catch (e) {
-        console.error('Failed to load CSV file', e);
+    // JSON 데이터를 직접 불러옵니다.
+    const markerData = require('./assets/museum.json');
+
+    // 마커 데이터 파싱
+    const parsedMarkers = markerData.map((item, index) => {
+      const latitude = parseFloat(item.위도);
+      const longitude = parseFloat(item.경도);
+
+      if (!isNaN(latitude) && !isNaN(longitude)) {  // 좌표 유효성 검사
+        return {
+          key: index.toString(),
+          latitude: latitude,
+          longitude: longitude,
+          title: item.시설명,
+          description: item.운영기관전화번호
+        };
       }
-    }
+    }).filter(marker => marker);  // 유효하지 않은 데이터 제거
 
-    loadCSV();
+    console.log("Valid markers:", parsedMarkers);  // 유효한 마커 로그 출력
+    setMarkers(parsedMarkers);
   }, []);
-
-  const parseCSV = (data) => {
-    const rows = data.split('\n');
-    const markers = rows.slice(1, 11).map(row => {
-      const columns = row.split(',');
-      return {
-        latitude: parseFloat(columns[3]),
-        longitude: parseFloat(columns[4]),
-        title: columns[0],
-        description: columns[2]
-      };
-    });
-    setMarkers(markers);
-  };
 
   return (
     <MapView
@@ -46,9 +39,9 @@ const MapScreen = () => {
         longitudeDelta: 0.0421,
       }}
     >
-      {markers.map((marker, index) => (
+      {markers.map(marker => (
         <Marker
-          key={index}
+          key={marker.key}
           coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
           title={marker.title}
         >
