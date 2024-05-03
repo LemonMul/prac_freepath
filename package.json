@@ -10,14 +10,16 @@
   },
   "dependencies": {
     "@expo/metro-config": "^0.17.7",
+    "axios": "^1.6.8",
     "csv-parse": "^5.5.5",
     "expo-file-system": "~16.0.9",
     "expo-status-bar": "~1.11.1",
     "papaparse": "^5.4.1",
+    "randomcolor": "^0.6.2",
     "react": "18.2.0",
     "react-native": "0.73.6",
     "react-native-fs": "^2.20.0",
-    "react-native-maps": "^1.10.0",
+    "react-native-maps": "^1.14.0",
     "react-native-webview": "13.6.4"
   },
   "devDependencies": {
